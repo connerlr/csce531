@@ -1,0 +1,21 @@
+# Makefile for expr
+CC=gcc
+#LEX=flex
+#YACC=bison
+CFLAGS=	-O
+#YFLAGS=	
+
+
+### old version of Makefile
+###expr:	y.tab.o yyerror.o yywhere.o
+###	${CC} ${CFLAGS} -o expr yywhere.o y.tab.o yyerror.o  -ly
+###
+
+
+simple0: simple0.y simple0.l
+
+expr:	expr.y
+
+clean:
+	rm -f core *.o cdecl cdlex.c cdgram.c
+

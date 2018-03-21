@@ -1,0 +1,25 @@
+##
+#
+#  Makefile for Simple Yacc and Lex examples 
+#
+#
+###
+CC=gcc
+CFLAGS=
+CFLAGS=-DYYDEBUG
+LEX=flex
+YACC=bison
+YACCFLAGS=
+YACCFLAGS=-t 
+
+simple4: simple4.tab.h simple4.tab.o lex.yy.o
+	$(CC) $(CFLAGS) simple4.tab.o lex.yy.o -ly -o simple4
+
+simple4.tab.h: simple4.y
+	bison -d $(YACCFLAGS) simple4.y
+
+simple4.tab.c: simple4.y
+	bison $(YACCFLAGS) simple4.y
+
+lex.yy.c: simple4.l
+	flex simple4.l 
