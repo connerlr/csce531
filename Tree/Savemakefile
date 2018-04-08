@@ -1,0 +1,17 @@
+# Note  yacc -d and yacc -v must be done explicitly
+#
+
+tree: tree.o lex.yy.o
+	gcc -DYYDEBUG tree.tab.o lex.yy.o -ly -lfl -o tree
+
+tree.tab.c: tree.y
+	bison tree.y
+
+tree.tab.h: 
+	bison -d tree.y
+
+lex.yy.c: tree.l
+	flex tree.l
+
+clean: 
+	-rm -f tree lex.yy.c tree.tab.c

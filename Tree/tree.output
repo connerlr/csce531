@@ -1,0 +1,158 @@
+Terminals unused in grammar
+
+   INT
+   '-'
+   '/'
+
+
+Grammar
+
+    0 $accept: task $end
+
+    1 task: task expr ';'
+    2     | task ';'
+    3     | %empty
+
+    4 expr: expr '+' expr
+    5     | expr '*' expr
+    6     | ID
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'*' (42) 5
+'+' (43) 4
+'-' (45)
+'/' (47)
+';' (59) 1 2
+error (256)
+INT (258)
+ID (259) 6
+
+
+Nonterminals, with rules where they appear
+
+$accept (10)
+    on left: 0
+task (11)
+    on left: 1 2 3, on right: 0 1 2
+expr (12)
+    on left: 4 5 6, on right: 1 4 5
+
+
+State 0
+
+    0 $accept: . task $end
+    1 task: . task expr ';'
+    2     | . task ';'
+    3     | . %empty
+
+    $default  reduce using rule 3 (task)
+
+    task  go to state 1
+
+
+State 1
+
+    0 $accept: task . $end
+    1 task: task . expr ';'
+    2     | task . ';'
+    4 expr: . expr '+' expr
+    5     | . expr '*' expr
+    6     | . ID
+
+    $end  shift, and go to state 2
+    ID    shift, and go to state 3
+    ';'   shift, and go to state 4
+
+    expr  go to state 5
+
+
+State 2
+
+    0 $accept: task $end .
+
+    $default  accept
+
+
+State 3
+
+    6 expr: ID .
+
+    $default  reduce using rule 6 (expr)
+
+
+State 4
+
+    2 task: task ';' .
+
+    $default  reduce using rule 2 (task)
+
+
+State 5
+
+    1 task: task expr . ';'
+    4 expr: expr . '+' expr
+    5     | expr . '*' expr
+
+    '+'  shift, and go to state 6
+    '*'  shift, and go to state 7
+    ';'  shift, and go to state 8
+
+
+State 6
+
+    4 expr: . expr '+' expr
+    4     | expr '+' . expr
+    5     | . expr '*' expr
+    6     | . ID
+
+    ID  shift, and go to state 3
+
+    expr  go to state 9
+
+
+State 7
+
+    4 expr: . expr '+' expr
+    5     | . expr '*' expr
+    5     | expr '*' . expr
+    6     | . ID
+
+    ID  shift, and go to state 3
+
+    expr  go to state 10
+
+
+State 8
+
+    1 task: task expr ';' .
+
+    $default  reduce using rule 1 (task)
+
+
+State 9
+
+    4 expr: expr . '+' expr
+    4     | expr '+' expr .  ['+', ';']
+    5     | expr . '*' expr
+
+    '*'  shift, and go to state 7
+
+    $default  reduce using rule 4 (expr)
+
+    Conflict between rule 4 and token '+' resolved as reduce (%left '+').
+    Conflict between rule 4 and token '*' resolved as shift ('+' < '*').
+
+
+State 10
+
+    4 expr: expr . '+' expr
+    5     | expr . '*' expr
+    5     | expr '*' expr .  ['+', '*', ';']
+
+    $default  reduce using rule 5 (expr)
+
+    Conflict between rule 5 and token '+' resolved as reduce ('+' < '*').
+    Conflict between rule 5 and token '*' resolved as reduce (%left '*').
